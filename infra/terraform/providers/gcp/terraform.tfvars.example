@@ -1,0 +1,14 @@
+project_id  = "replace-me"
+region      = "us-central1"
+environment = "dev"
+project_slug = "b3quant"
+
+service_image_map = {
+  api                  = "us-central1-docker.pkg.dev/replace-me/b3-platform/api:latest"
+  worker-ingestion     = "us-central1-docker.pkg.dev/replace-me/b3-platform/api:latest"
+  worker-feature-store = "us-central1-docker.pkg.dev/replace-me/b3-platform/api:latest"
+  worker-forecast      = "us-central1-docker.pkg.dev/replace-me/b3-platform/api:latest"
+  worker-simulation    = "us-central1-docker.pkg.dev/replace-me/b3-platform/api:latest"
+  worker-eod           = "us-central1-docker.pkg.dev/replace-me/b3-platform/api:latest"
+  dashboard-streamlit  = "us-central1-docker.pkg.dev/replace-me/b3-platform/dashboard:latest"
+}

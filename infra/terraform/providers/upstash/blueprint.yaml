@@ -1,0 +1,42 @@
+apiVersion: platform.b3.dev/v1alpha1
+kind: UpstashFoundation
+metadata:
+  name: b3quant-async-control-plane
+spec:
+  redis:
+    logicalName: locks-cache
+    purpose:
+      - distributed-locks
+      - response-cache
+      - short-lived-dedup
+    env:
+      url: B3_UPSTASH_REDIS_REST_URL
+      token: B3_UPSTASH_REDIS_REST_TOKEN
+    keyPrefixes:
+      lock: B3_UPSTASH_REDIS_LOCK_PREFIX
+      cache: B3_UPSTASH_REDIS_CACHE_PREFIX
+  qstash:
+    env:
+      token: B3_QSTASH_TOKEN
+      currentSigningKey: B3_QSTASH_CURRENT_SIGNING_KEY
+      nextSigningKey: B3_QSTASH_NEXT_SIGNING_KEY
+    retry:
+      maxAttempts: 5
+      strategy: exponential-backoff
+      baseDelaySeconds: 15
+    schedules:
+      - name: ingestion-close
+        cron: 10 18 * * 1-5
+        destinationEnv: B3_WORKER_INGESTION_URL
+      - name: feature-store-refresh
+        cron: 20 18 * * 1-5
+        destinationEnv: B3_WORKER_FEATURE_STORE_URL
+      - name: forecast-run
+        cron: 30 18 * * 1-5
+        destinationEnv: B3_WORKER_FORECAST_URL
+      - name: scenario-replay
+        cron: 40 18 * * 1-5
+        destinationEnv: B3_WORKER_SIMULATION_URL
+      - name: eod-reconciliation
+        cron: 50 18 * * 1-5
+        destinationEnv: B3_WORKER_EOD_URL

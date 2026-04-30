@@ -1,0 +1,37 @@
+apiVersion: platform.b3.dev/v1alpha1
+kind: CloudflareFoundation
+metadata:
+  name: b3quant-edge
+spec:
+  accountIdEnv: B3_CLOUDFLARE_ACCOUNT_ID
+  zoneIdEnv: B3_CLOUDFLARE_ZONE_ID
+  worker:
+    nameEnv: B3_CLOUDFLARE_WORKER_NAME
+    sourceDir: ../../../../edge/worker
+    runtime: workers
+    routes:
+      - path: /webhooks/qstash/eod
+        upstreamEnv: B3_WORKER_EOD_URL
+      - path: /webhooks/qstash/ingestion
+        upstreamEnv: B3_WORKER_INGESTION_URL
+      - path: /webhooks/qstash/feature-store
+        upstreamEnv: B3_WORKER_FEATURE_STORE_URL
+      - path: /webhooks/qstash/forecast
+        upstreamEnv: B3_WORKER_FORECAST_URL
+      - path: /webhooks/qstash/simulation
+        upstreamEnv: B3_WORKER_SIMULATION_URL
+  r2:
+    buckets:
+      - logicalName: bronze
+        env: B3_R2_BUCKET_BRONZE
+        defaultName: ${B3_PROJECT_SLUG}-${B3_ENVIRONMENT}-r2-bronze
+      - logicalName: silver
+        env: B3_R2_BUCKET_SILVER
+        defaultName: ${B3_PROJECT_SLUG}-${B3_ENVIRONMENT}-r2-silver
+      - logicalName: artifacts
+        env: B3_R2_BUCKET_ARTIFACTS
+        defaultName: ${B3_PROJECT_SLUG}-${B3_ENVIRONMENT}-r2-artifacts
+  secrets:
+    - B3_EDGE_SHARED_SECRET
+    - B3_R2_ACCESS_KEY_ID
+    - B3_R2_SECRET_ACCESS_KEY

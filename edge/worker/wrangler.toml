@@ -1,0 +1,7 @@
+name = "b3-edge-worker"
+main = "src/index.ts"
+compatibility_date = "2026-04-29"
+
+[vars]
+CLOUD_RUN_BASE_URL = "https://example.run.app"
+EDGE_SHARED_SECRET = "replace-me"

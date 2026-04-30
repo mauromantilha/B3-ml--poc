@@ -1,0 +1,29 @@
+apiVersion: platform.b3.dev/v1alpha1
+kind: SupabaseFoundation
+metadata:
+  name: b3quant-oltp
+spec:
+  projectRefEnv: B3_SUPABASE_PROJECT_REF
+  postgres:
+    primaryUrlEnv: B3_DATABASE_URL
+    poolUrlEnv: B3_SUPABASE_DB_POOL_URL
+    usage: oltp
+    extensions:
+      - pgcrypto
+    migrationsPath: ../../../../sql/migrations
+  authKeys:
+    anonKeyEnv: B3_SUPABASE_ANON_KEY
+    serviceRoleKeyEnv: B3_SUPABASE_SERVICE_ROLE_KEY
+  connectionPolicy:
+    usePoolerForCloudRun: true
+    longTransactionsAllowed: false
+  separationOfConcerns:
+    stores:
+      - portfolio-definitions
+      - job-runs
+      - market-eod-snapshots
+      - model-registry
+      - eod-comparisons
+    notAllowed:
+      - analytics-lakehouse
+      - parquet-artifacts
